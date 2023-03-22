@@ -5,5 +5,5 @@ import reactor.core.publisher.Mono;
 
 @FunctionalInterface
 public interface UpdatePortfolio {
-    Mono<PortfolioDTO> update(String studentId, PortfolioDTO studentDTO);
+    Mono<PortfolioDTO> update(String portfolioID, PortfolioDTO studentDTO);
 }

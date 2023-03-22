@@ -8,5 +8,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class PortfolioEvent {
     private String projectID;
-    private String eventType;
+    private final String eventType = "Append.Project";
 }

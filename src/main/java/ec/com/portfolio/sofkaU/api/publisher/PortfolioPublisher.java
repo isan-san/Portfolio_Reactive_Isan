@@ -20,8 +20,7 @@ public class PortfolioPublisher {
     }
 
     public void publish(PortfolioDTO bookDTO, String id) throws JsonProcessingException {
-        //String message = objectMapper.writeValueAsString("Book with id "+bookDTO.getId()+" has been lended to student with id "+id);
-        String message = objectMapper.writeValueAsString(new PortfolioEvent(id,"Project.Append"));
+        String message = objectMapper.writeValueAsString(new PortfolioEvent(id));
         rabbitTemplate.convertAndSend("books-exchange-events", "events.book.routing.key", message);
 
     }
