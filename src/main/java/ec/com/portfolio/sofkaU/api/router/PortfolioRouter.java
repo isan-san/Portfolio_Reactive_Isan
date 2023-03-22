@@ -11,6 +11,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import reactor.core.publisher.Mono;
 
 import static org.springframework.web.reactive.function.server.RequestPredicates.*;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
@@ -83,13 +84,14 @@ public class PortfolioRouter {
                 request ->
                         request.bodyToMono(ProjectDTO.class)
                                 .flatMap(projectDTO -> projectAPI.get().uri("/" + projectDTO.getProjectID())
-                                .retrieve()
-                                .bodyToMono(ProjectDTO.class)
-                                .flatMap(project ->
-                                        addProjectUseCase.add(request.pathVariable("id"), project)
-                                                .flatMap(result -> ServerResponse.status(200)
-                                                        .contentType(MediaType.APPLICATION_JSON)
-                                                        .bodyValue(result))
-                                                .onErrorResume(throwable -> ServerResponse.status(HttpStatus.NOT_ACCEPTABLE).build()))));
+                                        .retrieve()
+                                        .bodyToMono(ProjectDTO.class)
+                                        .flatMap(project ->
+                                                addProjectUseCase.add(request.pathVariable("id"), project)
+                                                        .switchIfEmpty(Mono.error(new Throwable("Didn't find project'")))
+                                                        .flatMap(result -> ServerResponse.status(200)
+                                                                .contentType(MediaType.APPLICATION_JSON)
+                                                                .bodyValue(result))
+                                                        .onErrorResume(throwable -> ServerResponse.status(HttpStatus.NOT_ACCEPTABLE).build()))));
     }
 }

@@ -20,12 +20,12 @@ class SaveUseCaseTest {
     @Mock
     IPortfolioRepository repository;
     ModelMapper modelMapper;
-    SavePortfolioUseCase saveBookUsecase;
+    SavePortfolioUseCase savePortfolioUseCase;
 
     @BeforeEach
     void init() {
         modelMapper = new ModelMapper();
-        saveBookUsecase = new SavePortfolioUseCase(repository, modelMapper);
+        savePortfolioUseCase = new SavePortfolioUseCase(repository, modelMapper);
     }
 
     @Test
@@ -42,7 +42,7 @@ class SaveUseCaseTest {
                     return Mono.just(portfolio);
                 });
 
-        Mono<PortfolioDTO> response = saveBookUsecase.save(modelMapper.map(portfolio, PortfolioDTO.class));
+        Mono<PortfolioDTO> response = savePortfolioUseCase.save(modelMapper.map(portfolio, PortfolioDTO.class));
 
         StepVerifier.create(response)
                 .expectNext(modelMapper.map(portfolio, PortfolioDTO.class))

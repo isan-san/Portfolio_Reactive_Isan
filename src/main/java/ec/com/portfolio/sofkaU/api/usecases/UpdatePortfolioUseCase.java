@@ -20,8 +20,8 @@ public class UpdatePortfolioUseCase implements UpdatePortfolio {
     public Mono<PortfolioDTO> update(String portfolioId, PortfolioDTO portfolioDTO) {
         return this.iPortfolioRepository.findById(portfolioId)
                 .switchIfEmpty(Mono.empty())
-                .flatMap(book -> {
-                    portfolioDTO.setPortfolioID(portfolioId);
+                .flatMap(portfolio -> {
+                    portfolioDTO.setPortfolioID(portfolio.getPortfolioID());
                     return iPortfolioRepository.save(mapper.map(portfolioDTO, Portfolio.class));
                 })
                 .switchIfEmpty(Mono.empty())

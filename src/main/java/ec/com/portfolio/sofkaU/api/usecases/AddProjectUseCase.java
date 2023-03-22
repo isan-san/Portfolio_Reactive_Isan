@@ -22,16 +22,15 @@ public class AddProjectUseCase implements IAddProject {
 
     @Override
     public Mono<PortfolioDTO> add(String portfolioId, ProjectDTO project) {
-        return this.iPortfolioRepository.findById(portfolioId)
-                .switchIfEmpty(Mono.empty())
-                .flatMap(portfolio -> {
-                    rabbitTemplate.convertAndSend(RabbitConfig.EXCHANGE,
-                            RabbitConfig.ROUTING_KEY,
-                            new PortfolioEvent(project));
-                    return iPortfolioRepository.save(portfolio.addProject(project))
-                            .map(updatedPortfolio -> mapper.map(updatedPortfolio, PortfolioDTO.class));
-                })
-                .onErrorResume(Mono::error);
+        return this.iPortfolioRepository.findById(portfolioId).switchIfEmpty(Mono.empty()).flatMap(portfolio -> {
+            if (project.getIsPublished()) {
+                return Mono.empty();
+            } else {
+                rabbitTemplate.convertAndSend(RabbitConfig.EXCHANGE, RabbitConfig.ROUTING_KEY, new PortfolioEvent(project));
+                project.setIsPublished(true);
+                return iPortfolioRepository.save(portfolio.addProject(project)).map(updatedPortfolio -> mapper.map(updatedPortfolio, PortfolioDTO.class));
+            }
+        }).onErrorResume(Mono::error);
     }
 
 }
