@@ -14,7 +14,7 @@ import reactor.test.StepVerifier;
 
 @ExtendWith(MockitoExtension.class)
 class DeleteUseCaseTest {
-/*
+
     @Mock
     IPortfolioRepository repository;
     DeleteUsecase deleteUsecase;
@@ -25,32 +25,32 @@ class DeleteUseCaseTest {
     }
 
     @Test
-    @DisplayName("getAllStudents_Success")
-    void getAllStudents() {
+    @DisplayName("delete_Success")
+    void getAllPortfolio() {
 
-        Portfolio student = new Portfolio();
-        student.setIdNumber("Test id");
-        student.setName("Test name");
-        student.setTheme("Test last name");
-        student.setPortfolioID("Test student");
+        Portfolio portfolio = new Portfolio();
+        portfolio.setPortfolioID("Test id");
+        portfolio.setName("Test name");
+        portfolio.setTheme("Test last name");
+        portfolio.setPortfolioID("Test portfolio");
 
-        Mockito.when(repository.findById("Test student")).
+        Mockito.when(repository.findById("Test portfolio")).
                 thenAnswer(InvocationOnMock -> {
-                    return Mono.just(student);
+                    return Mono.just(portfolio);
                 });
-        Mockito.when(repository.delete(student)).
+        Mockito.when(repository.delete(portfolio)).
                 thenAnswer(InvocationOnMock -> {
                     return Mono.just(Void.TYPE);
                 });
 
-        Mono<String> response = deleteUsecase.apply("Test student");
+        Mono<String> response = deleteUsecase.apply("Test portfolio");
 
         StepVerifier.create(response)
                 .expectNextCount(1)
                 .verifyComplete();
 
-        Mockito.verify(repository).delete(student);
-        Mockito.verify(repository).findById("Test student");
+        Mockito.verify(repository).delete(portfolio);
+        Mockito.verify(repository).findById("Test portfolio");
     }
-*/
+
 }

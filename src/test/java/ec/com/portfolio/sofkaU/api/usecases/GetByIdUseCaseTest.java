@@ -16,39 +16,40 @@ import reactor.test.StepVerifier;
 
 @ExtendWith(MockitoExtension.class)
 class GetByIdUseCaseTest {
-/*
+
     @Mock
     IPortfolioRepository repository;
     ModelMapper modelMapper;
-    GetPortfolioByIdUseCase getStudentByIdUsecase;
+    GetPortfolioByIdUseCase getPortfolioByIdUsecase;
 
     @BeforeEach
     void init() {
         modelMapper = new ModelMapper();
-        getStudentByIdUsecase = new GetPortfolioByIdUseCase(repository, modelMapper);
+        getPortfolioByIdUsecase = new GetPortfolioByIdUseCase(repository, modelMapper);
     }
 
     @Test
-    @DisplayName("getAllBooks_Success")
+    @DisplayName("getById_Success")
     void getAllBooks() {
 
-        Portfolio student = new Portfolio();
-        student.setIdNumber("Test id");
-        student.setName("Test name");
-        student.setTheme("Test last name");
+        Portfolio portfolio = new Portfolio();
+        portfolio.setPortfolioID("Test id");
+        portfolio.setName("Test name");
+        portfolio.setTheme("Test last name");
 
         Mockito.when(repository.findById("1")).
                 thenAnswer(InvocationOnMock -> {
-                    return Mono.just(student);
+                    return Mono.just(portfolio);
                 });
 
-        Mono<PortfolioDTO> response = getStudentByIdUsecase.apply("1");
+        Mono<PortfolioDTO> response = getPortfolioByIdUsecase.apply("1");
 
         StepVerifier.create(response)
-                .expectNextCount(1)
+                .expectNext(modelMapper.map(portfolio, PortfolioDTO.class))
+                .expectNextCount(0)
                 .verifyComplete();
 
         Mockito.verify(repository).findById("1");
     }
-*/
+
 }

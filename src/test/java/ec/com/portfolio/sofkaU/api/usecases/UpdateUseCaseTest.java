@@ -16,46 +16,45 @@ import reactor.test.StepVerifier;
 
 @ExtendWith(MockitoExtension.class)
 class UpdateUseCaseTest {
-/*
     @Mock
     IPortfolioRepository repository;
     ModelMapper modelMapper;
-    UpdatePortfolioUseCase updateStudentUsecase;
+    UpdatePortfolioUseCase updatePortfolioUsecase;
 
     @BeforeEach
     void init() {
         modelMapper = new ModelMapper();
-        updateStudentUsecase = new UpdatePortfolioUseCase(repository, modelMapper);
+        updatePortfolioUsecase = new UpdatePortfolioUseCase(repository, modelMapper);
     }
 
     @Test
-    @DisplayName("getAllBooks_Success")
+    @DisplayName("getAll_Success")
     void getAllBooks() {
 
-        Portfolio student = new Portfolio();
-        student.setIdNumber("Test id");
-        student.setName("Test name");
-        student.setTheme("Test last name");
-        student.setPortfolioID("Test student");
+        Portfolio portfolio = new Portfolio();
+        portfolio.setPortfolioID("Test id");
+        portfolio.setName("Test name");
+        portfolio.setTheme("Test last name");
+        portfolio.setPortfolioID("Test portfolio");
 
-        Mockito.when(repository.findById("Test student")).
+        Mockito.when(repository.findById("Test portfolio")).
                 thenAnswer(InvocationOnMock -> {
-                    return Mono.just(student);
+                    return Mono.just(portfolio);
                 });
-        Mockito.when(repository.save(student)).
+        Mockito.when(repository.save(portfolio)).
                 thenAnswer(InvocationOnMock -> {
-                    return Mono.just(student);
+                    return Mono.just(portfolio);
                 });
 
-        Mono<PortfolioDTO> response = updateStudentUsecase.update("Test student", modelMapper.map(student, PortfolioDTO.class));
+        Mono<PortfolioDTO> response = updatePortfolioUsecase.update("Test portfolio", modelMapper.map(portfolio, PortfolioDTO.class));
 
         StepVerifier.create(response)
-                .expectNextCount(1)
+                .expectNext(modelMapper.map(portfolio, PortfolioDTO.class))
+                .expectNextCount(0)
                 .verifyComplete();
 
-        Mockito.verify(repository).save(student);
-        Mockito.verify(repository).findById("Test student");
+        Mockito.verify(repository).save(portfolio);
+        Mockito.verify(repository).findById("Test portfolio");
     }
-
- */
+ 
 }

@@ -17,44 +17,45 @@ import reactor.test.StepVerifier;
 
 @ExtendWith(MockitoExtension.class)
 class GetAllUseCaseTest {
-    /*
+
     @Mock
     IPortfolioRepository repository;
     ModelMapper modelMapper;
-    GetAllPortfoliosUseCase getAllStudentsUsecase;
+    GetAllPortfoliosUseCase getAllPortfoliosUseCase;
 
     @BeforeEach
     void init() {
         modelMapper = new ModelMapper();
-        getAllStudentsUsecase = new GetAllPortfoliosUseCase(repository, modelMapper);
+        getAllPortfoliosUseCase = new GetAllPortfoliosUseCase(repository, modelMapper);
     }
 
     @Test
-    @DisplayName("getAllstudents_Success")
-    void getAllstudents() {
+    @DisplayName("getAll_Success")
+    void getAllPortfolios() {
 
-        Portfolio student = new Portfolio();
-        student.setIdNumber("Test id");
-        student.setName("Test name");
-        student.setTheme("Test last name");
+        Portfolio portfolio = new Portfolio();
+        portfolio.setPortfolioID("Test id");
+        portfolio.setName("Test name");
+        portfolio.setTheme("Test last name");
 
-        Portfolio student2 = new Portfolio();
-        student.setIdNumber("Test id2");
-        student.setName("Test name2");
-        student.setTheme("Test last name2");
+        Portfolio portfolio1 = new Portfolio();
+        portfolio.setPortfolioID("Test id2");
+        portfolio.setName("Test name2");
+        portfolio.setTheme("Test last name2");
 
         Mockito.when(repository.findAll()).
                 thenAnswer(InvocationOnMock -> {
-                    return Flux.just(student, student2);
+                    return Flux.just(portfolio, portfolio1);
                 });
 
-        Flux<PortfolioDTO> response = getAllStudentsUsecase.get();
+        Flux<PortfolioDTO> response = getAllPortfoliosUseCase.get();
 
         StepVerifier.create(response)
-                .expectNextCount(2)
+                .expectNextCount(1)
+                .expectNext(modelMapper.map(portfolio1, PortfolioDTO.class))
                 .verifyComplete();
 
         Mockito.verify(repository).findAll();
     }
-*/
+
 }

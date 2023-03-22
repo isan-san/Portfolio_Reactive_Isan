@@ -16,7 +16,7 @@ import reactor.test.StepVerifier;
 
 @ExtendWith(MockitoExtension.class)
 class SaveUseCaseTest {
-    /*
+
     @Mock
     IPortfolioRepository repository;
     ModelMapper modelMapper;
@@ -29,27 +29,27 @@ class SaveUseCaseTest {
     }
 
     @Test
-    @DisplayName("getAllBooks_Success")
+    @DisplayName("save_Success")
     void getAllBooks() {
 
-        Portfolio student = new Portfolio();
-        student.setIdNumber("Test id");
-        student.setName("Test name");
-        student.setTheme("Test last name");
+        Portfolio portfolio = new Portfolio();
+        portfolio.setPortfolioID("Test id");
+        portfolio.setName("Test name");
+        portfolio.setTheme("Test last name");
 
-        Mockito.when(repository.save(student)).
+        Mockito.when(repository.save(portfolio)).
                 thenAnswer(InvocationOnMock -> {
-                    return Mono.just(student);
+                    return Mono.just(portfolio);
                 });
 
-        Mono<PortfolioDTO> response = saveBookUsecase.save(modelMapper.map(student, PortfolioDTO.class));
+        Mono<PortfolioDTO> response = saveBookUsecase.save(modelMapper.map(portfolio, PortfolioDTO.class));
 
         StepVerifier.create(response)
-                .expectNextCount(1)
+                .expectNext(modelMapper.map(portfolio, PortfolioDTO.class))
+                .expectNextCount(0)
                 .verifyComplete();
-
-        Mockito.verify(repository).save(student);
+        Mockito.verify(repository).save(portfolio);
     }
-*/
+
 
 }
