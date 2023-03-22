@@ -1,5 +1,6 @@
 package ec.com.portfolio.sofkaU.api.router;
 
+import ec.com.portfolio.sofkaU.api.domain.collection.Project;
 import ec.com.portfolio.sofkaU.api.usecases.*;
 import ec.com.portfolio.sofkaU.api.domain.dto.PortfolioDTO;
 import org.springframework.context.annotation.Bean;
@@ -66,5 +67,17 @@ public class PortfolioRouter {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .bodyValue("Deleted Successfully"))
                         .onErrorResume(throwable -> ServerResponse.notFound().build()));
+    }
+
+    @Bean
+    public RouterFunction<ServerResponse> addProject (AddProjectUseCase addProjectUseCase) {
+        return route(PATCH("/portfolio/{id}").and(accept(MediaType.APPLICATION_JSON)),
+                request -> request.bodyToMono(Project.class)
+                        .flatMap(project ->
+                                addProjectUseCase.add(request.pathVariable("id"), project)
+                                .flatMap(result -> ServerResponse.status(200)
+                                        .contentType(MediaType.APPLICATION_JSON)
+                                        .bodyValue(result))
+                                .onErrorResume(throwable -> ServerResponse.status(HttpStatus.NOT_ACCEPTABLE).build())));
     }
 }
