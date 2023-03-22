@@ -27,4 +27,8 @@ public class Portfolio {
 
     private List<Project> projects = new ArrayList<>();
 
+    public Portfolio addProject(Project project){
+        this.projects.add(project);
+        return this;
+    }
 }
