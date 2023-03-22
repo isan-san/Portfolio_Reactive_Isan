@@ -1,16 +1,13 @@
 package ec.com.portfolio.sofkaU.api.domain.dto;
 
-import ec.com.portfolio.sofkaU.api.domain.collection.Project;
+import ec.com.portfolio.sofkaU.api.domain.collection.ProjectDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -26,6 +23,6 @@ public class PortfolioDTO {
 
     private Boolean published = false;
 
-    private List<Project> projects  = new ArrayList<>();
+    private List<ProjectDTO> projects  = new ArrayList<>();
 
 }

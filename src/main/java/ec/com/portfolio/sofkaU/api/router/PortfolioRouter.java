@@ -1,6 +1,6 @@
 package ec.com.portfolio.sofkaU.api.router;
 
-import ec.com.portfolio.sofkaU.api.domain.collection.Project;
+import ec.com.portfolio.sofkaU.api.domain.collection.ProjectDTO;
 import ec.com.portfolio.sofkaU.api.usecases.*;
 import ec.com.portfolio.sofkaU.api.domain.dto.PortfolioDTO;
 import org.springframework.context.annotation.Bean;
@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
@@ -16,6 +17,13 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 
 @Configuration
 public class PortfolioRouter {
+
+    private final WebClient projectAPI;
+
+    public PortfolioRouter() {
+        this.projectAPI = WebClient.create("http://localhost:8080/project");
+    }
+
 
     @Bean
     public RouterFunction<ServerResponse> getAllPortfolios(GetAllPortfoliosUseCase getAllPortfoliosUsecase) {
@@ -70,14 +78,18 @@ public class PortfolioRouter {
     }
 
     @Bean
-    public RouterFunction<ServerResponse> addProject (AddProjectUseCase addProjectUseCase) {
+    public RouterFunction<ServerResponse> addProject(AddProjectUseCase addProjectUseCase) {
         return route(PATCH("/portfolio/{id}").and(accept(MediaType.APPLICATION_JSON)),
-                request -> request.bodyToMono(Project.class)
-                        .flatMap(project ->
-                                addProjectUseCase.add(request.pathVariable("id"), project)
-                                .flatMap(result -> ServerResponse.status(200)
-                                        .contentType(MediaType.APPLICATION_JSON)
-                                        .bodyValue(result))
-                                .onErrorResume(throwable -> ServerResponse.status(HttpStatus.NOT_ACCEPTABLE).build())));
+                request ->
+                        request.bodyToMono(ProjectDTO.class)
+                                .flatMap(projectDTO -> projectAPI.get().uri("/" + projectDTO.getProjectID())
+                                .retrieve()
+                                .bodyToMono(ProjectDTO.class)
+                                .flatMap(project ->
+                                        addProjectUseCase.add(request.pathVariable("id"), project)
+                                                .flatMap(result -> ServerResponse.status(200)
+                                                        .contentType(MediaType.APPLICATION_JSON)
+                                                        .bodyValue(result))
+                                                .onErrorResume(throwable -> ServerResponse.status(HttpStatus.NOT_ACCEPTABLE).build()))));
     }
 }

@@ -1,13 +1,11 @@
 package ec.com.portfolio.sofkaU.api.usecases;
 
 import ec.com.portfolio.sofkaU.api.config.RabbitConfig;
-import ec.com.portfolio.sofkaU.api.domain.collection.Portfolio;
-import ec.com.portfolio.sofkaU.api.domain.collection.Project;
+import ec.com.portfolio.sofkaU.api.domain.collection.ProjectDTO;
 import ec.com.portfolio.sofkaU.api.domain.dto.PortfolioDTO;
 import ec.com.portfolio.sofkaU.api.publisher.PortfolioEvent;
 import ec.com.portfolio.sofkaU.api.repository.IPortfolioRepository;
 import ec.com.portfolio.sofkaU.api.usecases.interfaces.IAddProject;
-import ec.com.portfolio.sofkaU.api.usecases.interfaces.UpdatePortfolio;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -23,13 +21,13 @@ public class AddProjectUseCase implements IAddProject {
     private final RabbitTemplate rabbitTemplate;
 
     @Override
-    public Mono<PortfolioDTO> add(String portfolioId, Project project) {
+    public Mono<PortfolioDTO> add(String portfolioId, ProjectDTO project) {
         return this.iPortfolioRepository.findById(portfolioId)
                 .switchIfEmpty(Mono.empty())
                 .flatMap(portfolio -> {
                     rabbitTemplate.convertAndSend(RabbitConfig.EXCHANGE,
                             RabbitConfig.ROUTING_KEY,
-                            new PortfolioEvent(project.getProjectID()));
+                            new PortfolioEvent(project));
                     return iPortfolioRepository.save(portfolio.addProject(project))
                             .map(updatedPortfolio -> mapper.map(updatedPortfolio, PortfolioDTO.class));
                 })

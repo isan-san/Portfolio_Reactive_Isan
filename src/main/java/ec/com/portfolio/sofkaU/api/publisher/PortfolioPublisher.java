@@ -6,8 +6,8 @@ import ec.com.portfolio.sofkaU.api.domain.dto.PortfolioDTO;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 
-@Component
-public class PortfolioPublisher {
+//@Component
+public class PortfolioPublisher {/*
     private final RabbitTemplate rabbitTemplate;
     //private final DirectExchange exchange;
     private final ObjectMapper objectMapper;
@@ -27,5 +27,5 @@ public class PortfolioPublisher {
 
 
     public void publishError(Throwable errorEvent){
-    }
+    }*/
 }
