@@ -8,7 +8,7 @@ import org.springframework.data.annotation.Id;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProjectDTO {
+public class Project {
 
     @Id
     private String projectID;

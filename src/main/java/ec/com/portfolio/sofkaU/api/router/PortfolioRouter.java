@@ -1,6 +1,6 @@
 package ec.com.portfolio.sofkaU.api.router;
 
-import ec.com.portfolio.sofkaU.api.domain.collection.ProjectDTO;
+import ec.com.portfolio.sofkaU.api.domain.collection.Project;
 import ec.com.portfolio.sofkaU.api.usecases.*;
 import ec.com.portfolio.sofkaU.api.domain.dto.PortfolioDTO;
 import org.springframework.context.annotation.Bean;
@@ -82,10 +82,10 @@ public class PortfolioRouter {
     public RouterFunction<ServerResponse> addProject(AddProjectUseCase addProjectUseCase) {
         return route(PATCH("/portfolio/{id}").and(accept(MediaType.APPLICATION_JSON)),
                 request ->
-                        request.bodyToMono(ProjectDTO.class)
+                        request.bodyToMono(Project.class)
                                 .flatMap(projectDTO -> projectAPI.get().uri("/" + projectDTO.getProjectID())
                                         .retrieve()
-                                        .bodyToMono(ProjectDTO.class)
+                                        .bodyToMono(Project.class)
                                         .flatMap(project ->
                                                 addProjectUseCase.add(request.pathVariable("id"), project)
                                                         .switchIfEmpty(Mono.error(new Throwable("Didn't find project'")))

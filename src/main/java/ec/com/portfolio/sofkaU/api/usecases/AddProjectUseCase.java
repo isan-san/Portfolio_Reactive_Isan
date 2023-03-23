@@ -1,7 +1,7 @@
 package ec.com.portfolio.sofkaU.api.usecases;
 
 import ec.com.portfolio.sofkaU.api.config.RabbitConfig;
-import ec.com.portfolio.sofkaU.api.domain.collection.ProjectDTO;
+import ec.com.portfolio.sofkaU.api.domain.collection.Project;
 import ec.com.portfolio.sofkaU.api.domain.dto.PortfolioDTO;
 import ec.com.portfolio.sofkaU.api.publisher.PortfolioEvent;
 import ec.com.portfolio.sofkaU.api.repository.IPortfolioRepository;
@@ -21,13 +21,13 @@ public class AddProjectUseCase implements IAddProject {
     private final RabbitTemplate rabbitTemplate;
 
     @Override
-    public Mono<PortfolioDTO> add(String portfolioId, ProjectDTO project) {
+    public Mono<PortfolioDTO> add(String portfolioId, Project project) {
         return this.iPortfolioRepository.findById(portfolioId).switchIfEmpty(Mono.empty()).flatMap(portfolio -> {
             if (project.getIsPublished()) {
                 return Mono.empty();
             } else {
-                rabbitTemplate.convertAndSend(RabbitConfig.EXCHANGE, RabbitConfig.ROUTING_KEY, new PortfolioEvent(project));
                 project.setIsPublished(true);
+                rabbitTemplate.convertAndSend(RabbitConfig.EXCHANGE, RabbitConfig.ROUTING_KEY, new PortfolioEvent(project));
                 return iPortfolioRepository.save(portfolio.addProject(project)).map(updatedPortfolio -> mapper.map(updatedPortfolio, PortfolioDTO.class));
             }
         }).onErrorResume(Mono::error);

@@ -25,9 +25,9 @@ public class Portfolio {
 
     private Boolean published = false;
 
-    private List<ProjectDTO> projects = new ArrayList<>();
+    private List<Project> projects = new ArrayList<>();
 
-    public Portfolio addProject(ProjectDTO project){
+    public Portfolio addProject(Project project){
         this.projects.add(project);
         return this;
     }
