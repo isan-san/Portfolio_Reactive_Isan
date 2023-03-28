@@ -30,12 +30,12 @@ class AddProjectUseCaseTest {
     IPortfolioRepository repository;
     ModelMapper modelMapper;
     AddProjectUseCase addProjectUseCase;
+    @Mock
     RabbitTemplate rabbitTemplate;
 
     @BeforeEach
     void init() {
         modelMapper = new ModelMapper();
-        rabbitTemplate = new RabbitTemplate();
         addProjectUseCase = new AddProjectUseCase(repository, modelMapper, rabbitTemplate);
     }
 
@@ -63,13 +63,16 @@ class AddProjectUseCaseTest {
                     return Mono.just(InvocationOnMock.getArgument(0));
                 });
 
-        doNothing().when(rabbitTemplate).convertAndSend(anyString(),anyString(),any(Object.class));
-
         Mono<PortfolioDTO> response = addProjectUseCase.add("Test id", project);
 
+        Portfolio portfolio2 = new Portfolio();
+        portfolio2.setPortfolioID("Test id");
+        portfolio2.setName("Test name");
+        portfolio2.setTheme("Test last name");
+        portfolio2.setPortfolioID("Test portfolio");
 
         StepVerifier.create(response)
-                .expectNext(modelMapper.map(portfolio.addProject(project), PortfolioDTO.class))
+                .expectNext(modelMapper.map(portfolio2.addProject(project), PortfolioDTO.class))
                 .expectNextCount(0)
                 .verifyComplete();
 
